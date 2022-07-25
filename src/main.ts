@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,17 @@ async function bootstrap() {
     ],
     credentials: true,
   });
+
+  app.setGlobalPrefix('/api');
+
+  const config = new DocumentBuilder()
+    .setTitle('Nest API')
+    .setDescription('Nestjs typeorm and postgresql sample.')
+    .setVersion('1.0')
+    .addTag('app')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/api/docs', app, document);
 
   await app.listen(configService.get<string>('PORT'));
   Logger.log(`Services running at PORT ${configService.get<string>('PORT')}`);
