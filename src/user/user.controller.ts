@@ -22,7 +22,6 @@ import TransformInterceptor from 'src/config/TransformInterceptor';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @HttpCode(201)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -45,12 +44,8 @@ export class UserController {
 
   @Get()
   async findAll() {
-    try {
-      const users = await this.userService.findAll();
-      return successRes({ users });
-    } catch (error) {
-      return res500(error);
-    }
+    const users = await this.userService.findAll();
+    return successRes({ users });
   }
 
   @Get(':id')
@@ -64,7 +59,10 @@ export class UserController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: number) {
+    const deletedUser = await this.userService.remove(id);
+    return successRes({
+      message: deletedUser.affected ? 'User deleted' : 'Failed to delete user',
+    });
   }
 }
