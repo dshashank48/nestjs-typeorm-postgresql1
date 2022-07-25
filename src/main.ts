@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -18,6 +18,7 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('/api');
 
   const config = new DocumentBuilder()
