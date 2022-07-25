@@ -1,8 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+  const configService = new ConfigService();
+
+  //Middlewares
+  app.enableCors({
+    origin: [
+      configService.get<string>('PROD_DOMAIN'),
+      configService.get<string>('LOCAL_DOMAIN'),
+      configService.get<string>('DEV_DOMAIN'),
+    ],
+    credentials: true,
+  });
+
+  await app.listen(configService.get<string>('PORT'));
+  Logger.log(`Services running at PORT ${configService.get<string>('PORT')}`);
 }
 bootstrap();
