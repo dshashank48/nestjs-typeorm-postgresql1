@@ -22,6 +22,7 @@ import { DoctorModule } from './doctor/doctor.module';
         database: configService.get<string>('POSTGRES_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: false,
       }),
       inject: [ConfigService],
     }),

@@ -6,25 +6,51 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { duplicateError, res500, successRes } from 'src/config/utilFunctions';
+import TransformInterceptor from 'src/config/TransformInterceptor';
 
 @ApiTags('User')
+@UseInterceptors(TransformInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @HttpCode(201)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+    try {
+      // Check if user already exists
+      const foundUser = await this.userService.findByUsername(
+        createUserDto.username,
+      );
+
+      if (foundUser) {
+        return duplicateError(
+          `User already exists with this email : ${createUserDto.username}`,
+        );
+      }
+      const user = await this.userService.create(createUserDto);
+      return successRes({ user });
+    } catch (error) {
+      return res500(error);
+    }
   }
 
   @Get()
   async findAll() {
-    return this.userService.findAll();
+    try {
+      const users = await this.userService.findAll();
+      return successRes({ users });
+    } catch (error) {
+      return res500(error);
+    }
   }
 
   @Get(':id')
