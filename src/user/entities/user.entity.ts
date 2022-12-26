@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { AssignedDoctor } from 'src/doctor/entities/assigned-doctor';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -13,4 +20,7 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => AssignedDoctor, (assignedDoctor) => assignedDoctor.user)
+  assignedDoctors: AssignedDoctor[];
 }

@@ -18,8 +18,8 @@ export class DoctorController {
   constructor(private readonly doctorService: DoctorService) {}
 
   @Post()
-  create(@Body() createDoctorDto: CreateDoctorDto) {
-    return this.doctorService.create(createDoctorDto);
+  async create(@Body() createDoctorDto: CreateDoctorDto) {
+    return await this.doctorService.create(createDoctorDto);
   }
 
   @Get()
