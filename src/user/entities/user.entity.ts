@@ -1,4 +1,4 @@
-import { AssignedDoctor } from 'src/doctor/entities/assigned-doctor';
+import { AssignedDoctor } from 'src/doctor/entities/assigned-doctor.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

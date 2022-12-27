@@ -20,7 +20,9 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({
+      relations: ['assignedDoctors.doctor'],
+    });
   }
 
   async findOne(id: number) {

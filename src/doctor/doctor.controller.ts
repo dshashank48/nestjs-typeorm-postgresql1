@@ -8,23 +8,41 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { UserService } from 'src/user/user.service';
 import { DoctorService } from './doctor.service';
+import { CreateAssignedDoctorDto } from './dto/create-assigned-doctor.dto';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 
 @ApiTags('Doctor')
 @Controller('doctor')
 export class DoctorController {
-  constructor(private readonly doctorService: DoctorService) {}
+  constructor(
+    private readonly doctorService: DoctorService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   async create(@Body() createDoctorDto: CreateDoctorDto) {
     return await this.doctorService.create(createDoctorDto);
   }
 
+  @Post('assigned-doctor')
+  async createAssignedDoctor(@Body() createDoctorDto: CreateAssignedDoctorDto) {
+    const user = await this.userService.findOne(createDoctorDto.user);
+    const doctor = await this.doctorService.findOne(createDoctorDto.doctor);
+
+    return await this.doctorService.createAssignedDoctor(user, doctor);
+  }
+
   @Get()
-  findAll() {
-    return this.doctorService.findAll();
+  async findAll() {
+    return await this.doctorService.findAll();
+  }
+
+  @Get('assigned-doctor')
+  async findAllAssignedDoctors() {
+    return await this.doctorService.findAllAssignedDoctor();
   }
 
   @Get(':id')

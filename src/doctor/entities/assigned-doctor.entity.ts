@@ -5,6 +5,7 @@ import {
   Column,
   Unique,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Doctor } from './doctor.entity';
 
@@ -13,9 +14,13 @@ export class AssignedDoctor {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Doctor, (doctor) => doctor.assignedDoctors)
+  @ManyToOne(() => Doctor, (doctor) => doctor.assignedDoctors, {
+    onDelete: 'CASCADE',
+  })
   doctor: Doctor;
 
-  @ManyToOne(() => User, (user) => user.assignedDoctors)
+  @ManyToOne(() => User, (user) => user.assignedDoctors, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 }

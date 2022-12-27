@@ -5,7 +5,7 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { AssignedDoctor } from './assigned-doctor';
+import { AssignedDoctor } from './assigned-doctor.entity';
 @Entity()
 export class Doctor {
   @PrimaryGeneratedColumn()
